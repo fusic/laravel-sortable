@@ -6,68 +6,52 @@ use Illuminate\Support\Facades\Request;
 
 class Sortable
 {
-    public static function render($params)
+    private $formatedList = [];
+
+    public function process($builder, $query = null)
     {
-        $base = Request::getBasePath();
-        $path = Request::getPathInfo();
-        $full = sprintf("%s%s", $base, $path);
+        if (is_null($query)) {
+            $query = Request::query();
+        }
 
-        $queryString = self::generateQuery($params['key']);
-        $url = sprintf("%s%s", $full, $queryString);
+        $this->formatParams();
 
-        $link = sprintf("<a href=\"%s\">%s</a>", $url, $params['title']);
-        return $link;
+        $ret = $this->checkTarget($query);
+        if ($ret === false) {
+            return $builder;
+        }
+
+        return $builder
+            ->orderBy($query['sort'], $query['direction']);
     }
 
-    private static function generateQuery($baseKey)
+    private function checkTarget(array $query)
     {
-        $query = Request::query();
-        unset($query['sort'], $query['direction']);
+        $sortKey = $query['sort'] ?? null;
+        $sortDirection = $query['direction'] ?? null;
+        if ($sortKey === null | $sortDirection === null) {
+            return false;
+        }
 
-        $sort = Request::get('sort');
-        $direction = Request::get('direction');
+        if (!isset($this->formatedList[$sortKey])) {
+            return false;
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            return false;
+        }
 
-
-        $sortList = self::nextSort($baseKey, $sort, $direction);
-
-        $list = $query + $sortList;
-
-        $queryStringList = collect($list)
-            ->map(function ($item, $key) {
-                return sprintf("%s=%s", urlencode($key), urlencode($item));
-            })
-            ->toArray();
-
-        return '?' . implode('&', $queryStringList);
+        return true;
     }
 
-    private static function nextSort($baseKey, $sort, $direction)
+    private function formatParams()
     {
-        $default = [
-            'sort' => $baseKey,
-            'direction' => 'asc'
-        ];
-        if ($sort === null || $direction === null) {
-            return $default;
-        }
-
-        if (!in_array($direction, ['asc', 'desc'])) {
-            return $default;
-        }
-
-        if ($baseKey !== $sort) {
-            return $default;
-        }
-
-        $sort = [];
-        switch ($direction)
+        foreach ($this->params as $key => $value)
         {
-            case 'asc':
-                $sort['sort'] = $baseKey;
-                $sort['direction'] = 'desc';
-                break;
+            if (is_int($key)) {
+                $this->formatedList[$value] = $value;
+            } else {
+                $this->formatedList[$key] = $value;
+            }
         }
-
-        return $sort;
     }
 }
