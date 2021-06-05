@@ -1,0 +1,14 @@
+<?php
+namespace App\Sort;
+
+use Sortable\Sortable;
+
+class DummyClass extends Sortable
+{
+    public function __construct()
+    {
+        $this->params = [
+            //
+        ];
+    }
+}
