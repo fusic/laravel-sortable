@@ -2,7 +2,7 @@
 
 namespace Sortable;
 
-use Sortable\Requests\SortableLink;
+use Sortable\SortableLink;
 
 class Assessor
 {
