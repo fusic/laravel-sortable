@@ -28,7 +28,7 @@ class SortableCore
 
         $target = $this->formatedList[$requestSortKey];
         if (is_callable($target)) {
-            return $target($builder, $query);
+            return $target($builder, $query, $requestSortKey, $requestSortDirection);
         } else {
             return $builder
                 ->orderBy($target, $query['direction']);
