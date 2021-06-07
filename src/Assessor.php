@@ -4,7 +4,7 @@ namespace Sortable;
 
 use Sortable\SortableLink;
 
-class Assessor
+class Accessor
 {
     public static function render($params)
     {
