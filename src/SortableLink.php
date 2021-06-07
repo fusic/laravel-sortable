@@ -1,6 +1,6 @@
 <?php
 
-namespace Sortable\Requests;
+namespace Sortable;
 
 use Illuminate\Support\Facades\Request;
 
