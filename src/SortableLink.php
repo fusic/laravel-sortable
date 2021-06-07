@@ -38,7 +38,13 @@ class SortableLink
             })
             ->toArray();
 
-        return '?' . implode('&', $queryStringList);
+        if (count($queryStringList) > 0) {
+            $generatedQuery = '?' . implode('&', $queryStringList);
+        } else {
+            $generatedQuery = '';
+        }
+
+        return $generatedQuery;
     }
 
     private function nextSort($baseKey, $sort, $direction)
