@@ -26,7 +26,7 @@ class SortableServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::directive('sort', function ($params) {
-            return "<?php echo \Sortable\Assessor::render($params); ?>";
+            return "<?php echo \Sortable\Accessor::render($params); ?>";
         });
     }
 
