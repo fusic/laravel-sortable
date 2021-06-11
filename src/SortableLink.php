@@ -15,7 +15,14 @@ class SortableLink
         $queryString = $this->generateQuery($params['key']);
         $url = sprintf("%s%s", $full, $queryString);
 
-        $link = sprintf("<a href=\"%s\">%s</a>", $url, $params['title']);
+        $query = Request::query();
+        if (isset($query['sort']) && $params['key'] === $query['sort']) {
+            // if the item is a sort criterion, the direction is given to the class.
+            $link = sprintf("<a href=\"%s\" class=\"sort-key %s\">%s</a>", $url, $query['direction'], $params['title']);
+        } else {
+            $link = sprintf("<a href=\"%s\" class=\"sort-key\">%s</a>", $url, $params['title']);
+        }
+
         return $link;
     }
 
