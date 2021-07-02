@@ -16,11 +16,13 @@ class SortableLink
         $url = sprintf("%s%s", $full, $queryString);
 
         $query = Request::query();
-        if (isset($query['sort']) && $params['key'] === $query['sort']) {
-            // if the item is a sort criterion, the direction is given to the class.
-            $link = sprintf("<a href=\"%s\" class=\"sort-key %s\">%s</a>", $url, $query['direction'], $params['title']);
+
+        if (isset($params['default']) && isset($params['asc']) && isset($params['desc'])) {
+            // Render a sort link with passed DOM template
+            // Templates should be passed as $params['default'], $params['asc'], $params['desc']
+            $link = $this->generateLinkWithDom($url, $params, $query);
         } else {
-            $link = sprintf("<a href=\"%s\" class=\"sort-key\">%s</a>", $url, $params['title']);
+            $link = $this->generateLink($url, $params, $query);
         }
 
         return $link;
@@ -82,5 +84,28 @@ class SortableLink
         }
 
         return $sort;
+    }
+
+    private function generateLinkWithDom($url, $params, $query)
+    {
+        if (isset($query['sort']) && $params['key'] === $query['sort']) {
+            $link = sprintf("<a href=\"%s\" class=\"sort-key\">%s</a>", $url, $params[$query['direction']]);
+        } else {
+            $link = sprintf("<a href=\"%s\" class=\"sort-key\">%s</a>", $url, $params['default']);
+        }
+
+        return $link;
+    }
+
+    private function generateLink($url, $params, $query)
+    {
+        if (isset($query['sort']) && $params['key'] === $query['sort']) {
+            // if the item is a sort criterion, the direction is given to the class.
+            $link = sprintf("<a href=\"%s\" class=\"sort-key %s\">%s</a>", $url, $query['direction'], $params['title']);
+        } else {
+            $link = sprintf("<a href=\"%s\" class=\"sort-key\">%s</a>", $url, $params['title']);
+        }
+
+        return $link;
     }
 }
