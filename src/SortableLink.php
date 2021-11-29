@@ -43,7 +43,17 @@ class SortableLink
 
         $queryStringList = collect($list)
             ->map(function ($item, $key) {
-                return sprintf("%s=%s", urlencode($key), urlencode($item));
+                // チェックボックス等で配列でクエリに入る場合を考慮
+                if (is_array($item)) {
+                    $arr = [];
+                    foreach ($item as $k => $v) {
+                        $arr[] = sprintf("%s=%s", urlencode($key . '['.$k.']'), urlencode($v));
+                    }
+
+                    return implode('&', $arr);
+                } else {
+                    return sprintf("%s=%s", urlencode($key), urlencode($item));
+                }
             })
             ->toArray();
 
