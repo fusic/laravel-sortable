@@ -43,7 +43,7 @@ class SortableLink
 
         $queryStringList = collect($list)
             ->map(function ($item, $key) {
-                // チェックボックス等で配列でクエリに入る場合を考慮
+                // considering array in query strings
                 if (is_array($item)) {
                     $arr = [];
                     foreach ($item as $k => $v) {
