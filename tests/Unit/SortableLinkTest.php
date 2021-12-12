@@ -116,7 +116,7 @@ class SortableLinkTest extends TestCase
                 ['user_id'],
                 '?user_id=1&status=2&id=3&sort=user_id&direction=asc'
             ],
-            // neseted query
+            // nested query
             // considering array in query strings
             [
                 ['user_id' => [1, 2, 3]],
