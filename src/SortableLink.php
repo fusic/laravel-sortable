@@ -43,7 +43,17 @@ class SortableLink
 
         $queryStringList = collect($list)
             ->map(function ($item, $key) {
-                return sprintf("%s=%s", urlencode($key), urlencode($item));
+                // considering array in query strings
+                if (is_array($item)) {
+                    $arr = [];
+                    foreach ($item as $k => $v) {
+                        $arr[] = sprintf("%s=%s", urlencode($key . '['.$k.']'), urlencode($v));
+                    }
+
+                    return implode('&', $arr);
+                } else {
+                    return sprintf("%s=%s", urlencode($key), urlencode($item));
+                }
             })
             ->toArray();
 
